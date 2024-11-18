@@ -3,6 +3,7 @@
 import random
 from ability import Ability
 from armor import Armor
+from weapon import Weapon
 
 class Hero:
   # We want our hero to have a default "starting_health",
@@ -75,6 +76,9 @@ class Hero:
         total_block += armor.block()
         return total_block
       
+  def add_weapon(self, weapon):
+    self.abilities.append(weapon)
+      
   def take_damage(self, damage):
     self.current_health -= damage
 
@@ -98,3 +102,6 @@ if __name__ == "__main__":
     hero2.add_ability(ability3)
     hero2.add_ability(ability4)
     hero1.fight(hero2)
+    weapon = Weapon("Lasso of Truth", 90)
+    hero1.add_weapon(weapon)
+    print(hero1.attack())
