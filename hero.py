@@ -27,6 +27,9 @@ class Hero:
     # when a hero is created, their current health is
     # always the same as their starting health (no damage taken yet!)
     self.current_health = starting_health
+    self.deaths = 0
+    self.kills = 0
+
 
   def fight(self, opponent):
     ''' Current Hero will take turns fighting the opponent hero passed in.
@@ -36,18 +39,24 @@ class Hero:
     #1) randomly choose winner,
     # Hint: Look into random library, more specifically the choice method 
 
-    if(len(self.abilities) == 0 or len(opponent.abilities) == 0):
+    if(len(self.abilities) == 0 and len(opponent.abilities) == 0):
       print("Draw")
+      return
     else:
       while(self.is_alive() and opponent.is_alive()):
         damage_to_opponent = max(0, self.attack() - opponent.defend())
         opponent.take_damage(damage_to_opponent)
-        damage_to_self = max(0, opponent.attack()- self.defend())
-        self.take_damage(damage_to_self)
+        if(opponent.is_alive()):
+          damage_to_self = max(0, opponent.attack()- self.defend())
+          self.take_damage(damage_to_self)
     if(self.is_alive()):
       print(f"{self.name} won!")
+      self.kills +=1
+      opponent.deaths += 1
     else:
       print(f"{opponent.name} won!")
+      opponent.kills +=1
+      self.deaths += 1
 
     
 
@@ -74,13 +83,20 @@ class Hero:
       total_block = 0
       for armor in self.armors:
         total_block += armor.block()
-        return total_block
+    return total_block
       
   def add_weapon(self, weapon):
     self.abilities.append(weapon)
       
   def take_damage(self, damage):
     self.current_health -= damage
+
+  def add_kill(self, num_kills):
+    ''' Update self.kills by num_kills amount'''
+    self.kills += num_kills
+
+  def add_death(self, num_deaths):
+    self.deaths = num_deaths
 
   def is_alive(self):
     if self.current_health > 0:
